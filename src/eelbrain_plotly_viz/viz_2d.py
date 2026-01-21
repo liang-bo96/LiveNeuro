@@ -441,8 +441,12 @@ class EelbrainPlotly2DViz:
 
         This ensures consistent color mapping across time, making it easier to
         compare activity levels at different time points.
+
+        Also calculates a scale factor for very small data values to ensure
+        proper visualization in brain heatmaps.
         """
         data_max = 1.0
+        self.data_scale_factor = 1.0  # Scale factor for very small data
 
         if self.glass_brain_data is not None:
             # Calculate activity magnitude across all time points
@@ -456,9 +460,31 @@ class EelbrainPlotly2DViz:
 
             data_max = float(np.max(all_magnitudes))
 
+            # Auto-scale very small data (same logic as butterfly plot)
+            # This ensures brain heatmap uses the same scale as butterfly plot
+            if data_max < 1e-10:
+                self.data_scale_factor = 1e12
+            elif data_max < 1e-6:
+                self.data_scale_factor = 1e9
+            elif data_max < 1e-3:
+                self.data_scale_factor = 1e6
+
+            # Apply scale factor to data_max
+            data_max = data_max * self.data_scale_factor
+
+            # Debug: 打印数据范围信息
+            print(f"\n[DEBUG] Colormap range calculation:")
+            print(f"  glass_brain_data shape: {self.glass_brain_data.shape}")
+            print(f"  original data_max: {float(np.max(all_magnitudes)):.6e}")
+            print(f"  data_scale_factor: {self.data_scale_factor:.0e}")
+            print(f"  scaled data_max: {data_max:.6e}")
+
         # Apply user overrides if provided
         self.global_vmin = 0.0
         self.global_vmax = data_max if self.user_vmax is None else self.user_vmax
+
+        print(f"  global_vmin: {self.global_vmin:.6e}")
+        print(f"  global_vmax: {self.global_vmax:.6e}\n")
 
         # Ensure we have a valid range (avoid zero range)
         if self.global_vmax - self.global_vmin < 1e-10:
@@ -1338,6 +1364,10 @@ class EelbrainPlotly2DViz:
             else:  # (n_sources, n_times)
                 activity_magnitude = self.glass_brain_data[:, time_idx]
 
+            # Apply scale factor for very small data (same as butterfly plot)
+            scale_factor = getattr(self, 'data_scale_factor', 1.0)
+            activity_magnitude = activity_magnitude * scale_factor
+
             # Use global min/max for consistent colormap across all time points
             # This allows intuitive comparison of activity levels across time
             global_min = self.global_vmin
@@ -1443,6 +1473,9 @@ class EelbrainPlotly2DViz:
         if self.glass_brain_data is not None and len(active_indices) > 0:
             # (n_active, 3) or (n_active, 1)
             active_vectors = self.glass_brain_data[active_indices, :, time_idx]
+            # Apply scale factor for very small data (same as butterfly plot)
+            scale_factor = getattr(self, 'data_scale_factor', 1.0)
+            active_vectors = active_vectors * scale_factor
         else:
             active_vectors = None
 
