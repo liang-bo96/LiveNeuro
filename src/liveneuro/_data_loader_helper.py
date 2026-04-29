@@ -8,13 +8,10 @@ preparing data for visualization.
 """
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import numpy as np
 from eelbrain import NDVar, datasets
-
-if TYPE_CHECKING:
-    from ._liveneuro import LiveNeuro
 
 
 @dataclass
@@ -26,7 +23,7 @@ class BrainData:
     source_coords: np.ndarray  # (n_sources, 3)
     time_values: np.ndarray  # (n_times,)
     source_space: Any
-    parcellation: Optional[Any]
+    parcellation: Any | None
 
 
 class DataLoaderHelper:

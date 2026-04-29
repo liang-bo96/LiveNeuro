@@ -6,7 +6,7 @@ interface for Eelbrain's NDVar data structures. It transforms neuroscience data
 into explorable brain maps and time-series plots.
 """
 
-from typing import Optional, Union, List, Dict, Any
+from typing import Any
 
 import dash
 import numpy as np
@@ -102,12 +102,12 @@ class LiveNeuro:
 
     def __init__(
         self,
-        y: Optional[NDVar] = None,
-        cmap: Union[str, List] = "YlOrRd",
-        vmin: Optional[float] = None,
-        vmax: Optional[float] = None,
+        y: NDVar | None = None,
+        cmap: str | list = "YlOrRd",
+        vmin: float | None = None,
+        vmax: float | None = None,
         show_max_only: bool = False,
-        arrow_threshold: Optional[Union[float, str]] = None,
+        arrow_threshold: float | str | None = None,
         arrow_scale: float = 1.0,
         realtime: bool = False,
         layout_mode: str = "horizontal",
@@ -140,16 +140,16 @@ class LiveNeuro:
         )
 
         # Initialize data attributes
-        self.glass_brain_data: Optional[np.ndarray] = None  # (n_sources, 3, n_times)
-        self.butterfly_data: Optional[np.ndarray] = None  # (n_sources, n_times)
-        self.source_coords: Optional[np.ndarray] = None  # (n_sources, 3)
-        self.time_values: Optional[np.ndarray] = None  # (n_times,)
-        self.cmap: Union[str, List] = cmap  # Colorscale for heatmaps
-        self.user_vmin: Optional[float] = vmin  # Optional user-specified color min
-        self.user_vmax: Optional[float] = vmax  # Optional user-specified color max
+        self.glass_brain_data: np.ndarray | None = None  # (n_sources, 3, n_times)
+        self.butterfly_data: np.ndarray | None = None  # (n_sources, n_times)
+        self.source_coords: np.ndarray | None = None  # (n_sources, 3)
+        self.time_values: np.ndarray | None = None  # (n_times,)
+        self.cmap: str | list = cmap  # Colorscale for heatmaps
+        self.user_vmin: float | None = vmin  # Optional user-specified color min
+        self.user_vmax: float | None = vmax  # Optional user-specified color max
         self.show_max_only: bool = show_max_only  # Control butterfly plot display mode
         # Threshold for displaying arrows
-        self.arrow_threshold: Optional[Union[float, str]] = arrow_threshold
+        self.arrow_threshold: float | str | None = arrow_threshold
         # Scale factor for arrow length
         self.arrow_scale: float = arrow_scale
         self.is_jupyter_mode: bool = False  # Track if running in Jupyter mode
@@ -157,17 +157,17 @@ class LiveNeuro:
             ["realtime"] if realtime else []
         )  # Default state for real-time mode
         self.show_labels: bool = show_labels  # Control titles and legends display
-        self.current_layout_config: Optional[Dict[str, Any]] = None
+        self.current_layout_config: dict[str, Any] | None = None
 
         # Initialize source space attributes
         self.source_space: Any = None
-        self.parcellation: Optional[Any] = None
-        self.view_ranges: Dict[str, Dict[str, List[float]]] = {}
+        self.parcellation: Any | None = None
+        self.view_ranges: dict[str, dict[str, list[float]]] = {}
         self.global_vmin: float = 0.0
         self.global_vmax: float = 1.0
 
         # Internal data model (populated during initialization)
-        self._brain_data: Optional[BrainData] = None
+        self._brain_data: BrainData | None = None
 
         # Internal helper components
         self._data_loader = DataLoaderHelper()
@@ -247,9 +247,9 @@ class LiveNeuro:
 
     def run(
         self,
-        port: Optional[int] = None,
+        port: int | None = None,
         debug: bool = False,
-        mode: Optional[str] = None,
+        mode: str | None = None,
     ) -> None:
         """Run the interactive visualization.
 
@@ -271,9 +271,9 @@ class LiveNeuro:
     def export_images(
         self,
         output_dir: str = "./images",
-        time_idx: Optional[int] = None,
+        time_idx: int | None = None,
         format: str = "png",
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Export plots as image files.
 
         Parameters

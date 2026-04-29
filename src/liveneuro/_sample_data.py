@@ -6,7 +6,7 @@ without requiring eelbrain dependencies.
 """
 
 import numpy as np
-from typing import Tuple, Dict, Any, Optional
+from typing import Any
 
 
 class _SampleTimeDim:
@@ -15,7 +15,7 @@ class _SampleTimeDim:
 
 
 class _SampleSourceDim:
-    def __init__(self, coordinates: np.ndarray, parc: Optional[Any] = None):
+    def __init__(self, coordinates: np.ndarray, parc: Any | None = None):
         self.coordinates = coordinates
         self.parc = parc
 
@@ -67,7 +67,7 @@ class SampleDataNDVar(dict):
             return self.time
         raise ValueError(f"Unknown dimension '{name}'")
 
-    def get_data(self, order: Tuple[str, ...]):
+    def get_data(self, order: tuple[str, ...]):
         # Expected orders:
         # - ("source", "space", "time") for vector data
         # - ("source", "time") for scalar data
@@ -237,7 +237,7 @@ def _create_vector_brain_activity(
     return data
 
 
-def create_sample_mne_like_data() -> Dict[str, Any]:
+def create_sample_mne_like_data() -> dict[str, Any]:
     """
     Create sample data that mimics MNE/Eelbrain structure.
 

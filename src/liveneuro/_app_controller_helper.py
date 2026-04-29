@@ -6,7 +6,7 @@ handling callbacks, hover/click events, and export functionality.
 """
 
 import random
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any
 
 import dash
 import numpy as np
@@ -123,9 +123,9 @@ class AppControllerHelper:
             State("realtime-mode-switch", "value"),
         )
         def handle_butterfly_interaction(
-            click_data: Optional[Dict[str, Any]],
-            hover_data: Optional[Dict[str, Any]],
-            realtime_value: List[str],
+            click_data: dict[str, Any] | None,
+            hover_data: dict[str, Any] | None,
+            realtime_value: list[str],
         ) -> tuple[Any, Any, Any]:
             """Handle user interaction with butterfly plot.
 
@@ -216,9 +216,9 @@ class AppControllerHelper:
 
     def run(
         self,
-        port: Optional[int] = None,
+        port: int | None = None,
         debug: bool = False,
-        mode: Optional[str] = None,
+        mode: str | None = None,
     ) -> None:
         """Run the Dash app with Jupyter integration support.
 
@@ -293,9 +293,9 @@ class AppControllerHelper:
     def export_images(
         self,
         output_dir: str = "./images",
-        time_idx: Optional[int] = None,
+        time_idx: int | None = None,
         format: str = "png",
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Export current plots as image files.
 
         Parameters

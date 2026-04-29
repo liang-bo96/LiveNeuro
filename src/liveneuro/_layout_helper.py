@@ -22,7 +22,7 @@ Example
 """
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any
 
 import plotly.graph_objects as go
 from dash import dcc, html
@@ -65,7 +65,7 @@ class LayoutBuilder(ABC):
     """
 
     @abstractmethod
-    def build(self, app: "LiveNeuro") -> Dict[str, Any]:
+    def build(self, app: "LiveNeuro") -> dict[str, Any]:
         """Build layout configuration and Dash layout components.
 
         Parameters
@@ -81,7 +81,7 @@ class LayoutBuilder(ABC):
         raise NotImplementedError
 
     @staticmethod
-    def _get_layout_config(app: "LiveNeuro") -> Dict[str, Any]:
+    def _get_layout_config(app: "LiveNeuro") -> dict[str, Any]:
         """Get base layout configuration.
 
         Parameters
@@ -101,11 +101,11 @@ class LayoutBuilder(ABC):
     @staticmethod
     def _create_brain_view_containers(
         app: "LiveNeuro",
-        brain_plots: Dict[str, go.Figure],
+        brain_plots: dict[str, go.Figure],
         brain_height: str,
         brain_width: str,
         brain_margin: str,
-    ) -> List:
+    ) -> list:
         """Create dynamic brain view containers based on display_mode.
 
         Parameters
@@ -155,7 +155,7 @@ class VerticalLayout(LayoutBuilder):
     at the top and brain projections arranged horizontally below.
     """
 
-    def build(self, app: "LiveNeuro") -> Dict[str, Any]:
+    def build(self, app: "LiveNeuro") -> dict[str, Any]:
         """Build vertical layout for the visualization app.
 
         Parameters
@@ -185,7 +185,7 @@ class VerticalLayout(LayoutBuilder):
         )
         return {"config": config, "layout": layout}
 
-    def _get_vertical_config(self, app: "LiveNeuro") -> Dict[str, Any]:
+    def _get_vertical_config(self, app: "LiveNeuro") -> dict[str, Any]:
         """Get configuration for vertical layout."""
         base = self._get_layout_config(app)
         num_views = base["num_views"]
@@ -212,7 +212,7 @@ class VerticalLayout(LayoutBuilder):
         return config
 
     @staticmethod
-    def _get_brain_width_for_views(num_views: int) -> Dict[str, str]:
+    def _get_brain_width_for_views(num_views: int) -> dict[str, str]:
         """Calculate brain view width based on number of views."""
         if num_views == 1:
             return {"jupyter": "98%", "browser": "98%"}
@@ -224,7 +224,7 @@ class VerticalLayout(LayoutBuilder):
             return {"jupyter": "24%", "browser": "24%"}
 
     @staticmethod
-    def _parse_height(height_str: Any) -> Optional[int]:
+    def _parse_height(height_str: Any) -> int | None:
         """Parse height string to integer pixels."""
         if isinstance(height_str, str) and height_str.endswith("px"):
             try:
@@ -237,8 +237,8 @@ class VerticalLayout(LayoutBuilder):
         self,
         app: "LiveNeuro",
         initial_butterfly: go.Figure,
-        initial_brain_plots: Dict[str, go.Figure],
-        config: Dict[str, Any],
+        initial_brain_plots: dict[str, go.Figure],
+        config: dict[str, Any],
     ) -> html.Div:
         """Setup traditional vertical layout (butterfly top, brain views below).
 
@@ -326,7 +326,7 @@ class HorizontalLayout(LayoutBuilder):
     with brain projections arranged on the right side.
     """
 
-    def build(self, app: "LiveNeuro") -> Dict[str, Any]:
+    def build(self, app: "LiveNeuro") -> dict[str, Any]:
         """Build horizontal layout for the visualization app.
 
         Parameters
@@ -356,7 +356,7 @@ class HorizontalLayout(LayoutBuilder):
         )
         return {"config": config, "layout": layout}
 
-    def _get_horizontal_config(self, app: "LiveNeuro") -> Dict[str, Any]:
+    def _get_horizontal_config(self, app: "LiveNeuro") -> dict[str, Any]:
         """Get configuration for horizontal layout."""
         base = self._get_layout_config(app)
         num_views = base["num_views"]
@@ -384,7 +384,7 @@ class HorizontalLayout(LayoutBuilder):
         return config
 
     @staticmethod
-    def _get_brain_width_for_views(num_views: int) -> Dict[str, str]:
+    def _get_brain_width_for_views(num_views: int) -> dict[str, str]:
         """Calculate brain view width for horizontal layout."""
         butterfly_width = 30
         available_for_brains = 100 - butterfly_width
@@ -393,7 +393,7 @@ class HorizontalLayout(LayoutBuilder):
         return {"jupyter": brain_width_str, "browser": brain_width_str}
 
     @staticmethod
-    def _parse_height(height_str: Any) -> Optional[int]:
+    def _parse_height(height_str: Any) -> int | None:
         """Parse height string to integer pixels."""
         if isinstance(height_str, str) and height_str.endswith("px"):
             try:
@@ -446,11 +446,11 @@ class HorizontalLayout(LayoutBuilder):
     @staticmethod
     def _create_brain_view_containers_horizontal(
         app: "LiveNeuro",
-        brain_plots: Dict[str, go.Figure],
+        brain_plots: dict[str, go.Figure],
         brain_height: str,
         brain_width: str,
         brain_margin: str,
-    ) -> List:
+    ) -> list:
         """Create dynamic brain view containers for horizontal layout."""
         containers = []
 
@@ -495,8 +495,8 @@ class HorizontalLayout(LayoutBuilder):
         self,
         app: "LiveNeuro",
         initial_butterfly: go.Figure,
-        initial_brain_plots: Dict[str, go.Figure],
-        config: Dict[str, Any],
+        initial_brain_plots: dict[str, go.Figure],
+        config: dict[str, Any],
     ) -> html.Div:
         """Setup horizontal layout (butterfly left, brain views right).
 
@@ -632,7 +632,7 @@ class HorizontalLayout(LayoutBuilder):
 #: Registry of available layout strategies.
 #: Contains 'vertical' and 'horizontal' by default.
 #: New strategies can be added via register_layout() without modifying existing code.
-LAYOUTS: Dict[str, LayoutBuilder] = {
+LAYOUTS: dict[str, LayoutBuilder] = {
     "vertical": VerticalLayout(),
     "horizontal": HorizontalLayout(),
 }
@@ -721,7 +721,7 @@ class LayoutBuilderHelper:
         """
         self._viz = viz
 
-    def setup_layout(self) -> Dict[str, Any]:
+    def setup_layout(self) -> dict[str, Any]:
         """Setup the Dash app layout based on layout_mode.
 
         This method delegates to the appropriate LayoutBuilder strategy
@@ -733,7 +733,7 @@ class LayoutBuilderHelper:
         result = builder.build(self._viz)
         return result
 
-    def _get_layout_config(self) -> Dict[str, Any]:
+    def _get_layout_config(self) -> dict[str, Any]:
         """Get layout configuration based on layout_mode, display_mode and environment.
 
         Returns
@@ -791,7 +791,7 @@ class LayoutBuilderHelper:
 
         return config
 
-    def estimate_jupyter_iframe_height(self) -> Optional[int]:
+    def estimate_jupyter_iframe_height(self) -> int | None:
         """Estimate iframe height so plots fill the cell without stretching."""
         if not self._viz.is_jupyter_mode:
             return None
@@ -800,7 +800,7 @@ class LayoutBuilderHelper:
         if not config:
             return None
 
-        def _to_pixels(value: Any) -> Optional[int]:
+        def _to_pixels(value: Any) -> int | None:
             if value is None:
                 return None
             if isinstance(value, (int, float)):
@@ -831,7 +831,7 @@ class LayoutBuilderHelper:
         return max(total_height, 200)
 
     @staticmethod
-    def _get_brain_width_for_views(num_views: int, layout_mode: str) -> Dict[str, str]:
+    def _get_brain_width_for_views(num_views: int, layout_mode: str) -> dict[str, str]:
         """Calculate brain view width based on number of views and layout mode."""
         if layout_mode == "vertical":
             if num_views == 1:
@@ -850,7 +850,7 @@ class LayoutBuilderHelper:
             return {"jupyter": brain_width_str, "browser": brain_width_str}
 
     @staticmethod
-    def parse_display_mode(mode: str) -> List[str]:
+    def parse_display_mode(mode: str) -> list[str]:
         """Parse display_mode string into list of required brain views.
 
         Parameters
@@ -904,8 +904,8 @@ class LayoutBuilderHelper:
 
     @staticmethod
     def unify_view_sizes_for_jupyter(
-        view_ranges: Dict[str, Dict[str, List[float]]],
-    ) -> Dict[str, Dict[str, List[float]]]:
+        view_ranges: dict[str, dict[str, list[float]]],
+    ) -> dict[str, dict[str, list[float]]]:
         """Unify view sizes for Jupyter mode to ensure consistent display.
 
         This method adjusts all brain view ranges to have the same width and height,
@@ -921,7 +921,7 @@ class LayoutBuilderHelper:
         # Use the larger of the two to ensure square-ish plots with equal sizing
         max_width = max(max_x_width, max_y_width)
 
-        unified_ranges: Dict[str, Dict[str, List[float]]] = {}
+        unified_ranges: dict[str, dict[str, list[float]]] = {}
         for view_name, ranges in view_ranges.items():
             x_center = (ranges["x"][0] + ranges["x"][1]) / 2
             y_center = (ranges["y"][0] + ranges["y"][1]) / 2

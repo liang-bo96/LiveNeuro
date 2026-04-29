@@ -8,7 +8,7 @@ creation.
 
 import base64
 import io
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -42,9 +42,9 @@ class PlotFactoryHelper:
             The LiveNeuro instance this helper operates on.
         """
         self._viz = viz
-        self._butterfly_cache: Optional[Dict[str, Any]] = None
+        self._butterfly_cache: dict[str, Any] | None = None
 
-    def _get_butterfly_plot_cache(self) -> Dict[str, Any]:
+    def _get_butterfly_plot_cache(self) -> dict[str, Any]:
         """Get cached butterfly plot computations derived from butterfly_data.
 
         This caches computations that are independent of the selected time index,
@@ -95,14 +95,14 @@ class PlotFactoryHelper:
 
     @staticmethod
     def calculate_view_ranges(
-        source_coords: Optional[np.ndarray], brain_views: List[str]
-    ) -> Dict[str, Dict[str, List[float]]]:
+        source_coords: np.ndarray | None, brain_views: list[str]
+    ) -> dict[str, dict[str, list[float]]]:
         """Calculate fixed axis ranges for each brain view to prevent size changes."""
         if source_coords is None:
             return {}
 
         coords = source_coords
-        view_ranges: Dict[str, Dict[str, List[float]]] = {}
+        view_ranges: dict[str, dict[str, list[float]]] = {}
 
         for view_name in brain_views:
             # Get the appropriate coordinate projections for each view
@@ -146,10 +146,10 @@ class PlotFactoryHelper:
 
     @staticmethod
     def calculate_global_colormap_range(
-        glass_brain_data: Optional[np.ndarray],
-        user_vmin: Optional[float],
-        user_vmax: Optional[float],
-    ) -> Tuple[float, float]:
+        glass_brain_data: np.ndarray | None,
+        user_vmin: float | None,
+        user_vmax: float | None,
+    ) -> tuple[float, float]:
         """Calculate global min/max activity across all time points for fixed colormap."""
         data_max = 1.0
 
@@ -171,7 +171,7 @@ class PlotFactoryHelper:
         return global_vmin, global_vmax
 
     def create_butterfly_plot(
-        self, selected_time_idx: int = 0, figure_height: Optional[int] = None
+        self, selected_time_idx: int = 0, figure_height: int | None = None
     ) -> go.Figure:
         """Create butterfly plot figure (internal method).
 
@@ -333,8 +333,8 @@ class PlotFactoryHelper:
         return fig
 
     def create_2d_brain_projections_plotly(
-        self, time_idx: int = 0, source_idx: Optional[int] = None
-    ) -> Dict[str, go.Figure]:
+        self, time_idx: int = 0, source_idx: int | None = None
+    ) -> dict[str, go.Figure]:
         """Create 2D brain projections using Plotly scatter plots (internal method)."""
         if (
             self._viz.glass_brain_data is None
@@ -447,11 +447,11 @@ class PlotFactoryHelper:
         coords: np.ndarray,
         activity: np.ndarray,
         time_value: float,
-        selected_source: Optional[int] = None,
+        selected_source: int | None = None,
         show_colorbar: bool = True,
         zmin: float = None,
         zmax: float = None,
-        figure_height: Optional[int] = None,
+        figure_height: int | None = None,
     ) -> go.Figure:
         """Create a Plotly plot for a specific brain view with vector arrows.
 
@@ -828,7 +828,7 @@ class PlotFactoryHelper:
         color: str = "black",
         width: int = 1,
         size: float = 0.8,
-        activity_values: Optional[np.ndarray] = None,
+        activity_values: np.ndarray | None = None,
     ) -> None:
         """Create arrows using Plotly's figure_factory quiver plot.
 
@@ -895,7 +895,7 @@ class PlotFactoryHelper:
         color: str = "black",
         width: int = 1,
         size: float = 0.8,
-        activity_values: Optional[np.ndarray] = None,
+        activity_values: np.ndarray | None = None,
     ) -> None:
         """Create arrows using annotation-based method (fallback for quiver).
 
