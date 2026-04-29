@@ -17,8 +17,6 @@ and usage documentation lives in the
 - `.github/workflows/`: CI checks for linting and tests
 - `pyproject.toml`: packaging metadata, runtime dependencies, dev extras, and
   pytest configuration
-- `validate_package.py`: release-oriented smoke check for package structure,
-  imports, dependencies, metadata, and Eelbrain integration
 
 ## Contributor Setup
 
@@ -42,12 +40,6 @@ Run the main test suite:
 pytest
 ```
 
-Run the package smoke check before distribution-oriented changes:
-
-```bash
-python validate_package.py
-```
-
 Build the user documentation when changing files under `docs/`:
 
 ```bash
@@ -55,3 +47,5 @@ cd docs
 pip install -r requirements.txt
 make html
 ```
+
+CI also runs linting, package build, and package metadata checks.
