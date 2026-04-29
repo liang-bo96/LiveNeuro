@@ -355,8 +355,8 @@ Zoom and Pan
 Data Input
 ----------
 
-Using Built-in Sample Data
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Using Built-in MNE Sample Data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Simplest option for testing and learning:
 

@@ -4,20 +4,13 @@ Installation
 Requirements
 ------------
 
-LiveNeuro requires:
+LiveNeuro requires Python 3.8 or higher and an environment with Eelbrain
+available. The recommended procedure is to create an environment through
+``mamba`` following the official Eelbrain installation guide, then install
+LiveNeuro with ``pip``:
 
-* Python 3.8 or higher
-* NumPy >= 1.20.0
-* Plotly >= 5.0.0
-* Dash >= 2.0.0
-* Matplotlib >= 3.3.0
-* SciPy >= 1.7.0
-* Eelbrain
-* Kaleido >= 0.2.0 (for image export)
+https://eelbrain.readthedocs.io/en/stable/installing.html
 
-The recommended procedure is to create an environment through `mamba` 
-(see  https://eelbrain.readthedocs.io/en/stable/installing.html) 
-and then install LiveNeuro through `pip`.
 Install from GitHub
 -------------------
 
@@ -26,17 +19,6 @@ Install directly from GitHub:
 .. code-block:: bash
 
    pip install https://github.com/liang-bo96/LiveNeuro/archive/refs/heads/main.zip
-
-Local Development
------------------
-
-To install from source for development:
-
-.. code-block:: bash
-
-   git clone https://github.com/liang-bo96/LiveNeuro.git
-   cd LiveNeuro
-   pip install -e .
 
 Verify Installation
 -------------------
@@ -72,10 +54,12 @@ If you encounter version conflicts, try:
 
 **Missing dependencies**
 
-Some features require Eelbrain.
+If Eelbrain is missing or not importable, revisit the Eelbrain installation
+guide for platform-specific environment setup.
 
 .. code-block:: bash
 
    mamba install -c conda-forge eelbrain
 
-See the official Eelbrain install guide for more details: https://eelbrain.readthedocs.io/en/stable/installing.html
+For editable installs, test commands, and repository structure, see the
+repository ``README.md``.

@@ -27,7 +27,6 @@ Key Features
 * **Activity time-course plots** for time series visualization
 * **Optimized arrow rendering** for smoother interaction with dense vector fields
 * **Real-time controls** for time navigation and interaction
-* **Flexible data input** - supports Eelbrain NDVar, numpy arrays, and built-in MNE sample data
 * **Jupyter notebook support** for interactive development
 * **Customizable colormaps** and visualization options
 * **Export capabilities** for static images
@@ -51,7 +50,7 @@ Basic Usage
 
    from liveneuro import LiveNeuro
 
-   # Create visualization with built-in sample data
+   # Create visualization with built-in MNE sample data
    viz = LiveNeuro()
    
    # Launch in interactive plot
@@ -66,7 +65,6 @@ For a full walkthrough of layouts and controls, start with the :doc:`user_guide`
    installation
    user_guide
    api_reference
-   changelog
 
 Indices and tables
 ==================

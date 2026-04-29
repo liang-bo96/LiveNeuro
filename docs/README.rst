@@ -48,7 +48,6 @@ Documentation Structure
 * ``installation.rst``: Installation instructions
 * ``user_guide.rst``: Comprehensive user guide (recommended starting point)
 * ``api_reference.rst``: Complete API reference
-* ``changelog.rst``: Version history and release notes
 
 Rebuilding
 ----------

@@ -1,7 +1,6 @@
 include README.md
 include LICENSE
 include pyproject.toml
-include example.py
 recursive-include src *.py
 recursive-include src/liveneuro/data *
 recursive-include tests *.py
