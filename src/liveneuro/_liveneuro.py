@@ -41,8 +41,8 @@ class LiveNeuro:
         background and doesn't obscure arrows. See
         https://plotly.com/python/builtin-colorscales/ for all available options.
     vmin
-        Lower bound for the color range. Currently ignored; the minimum is always
-        fixed at 0 for all projections and time points.
+        Optional lower bound for the color range. If provided, locks the minimum
+        for all projections and time points.
     vmax
         Optional upper bound for the color range. If provided, locks the maximum
         for all projections and time points.
@@ -217,7 +217,7 @@ class LiveNeuro:
         # Calculate global colormap range across all time points for consistent visualization
         self.global_vmin, self.global_vmax = (
             self._plot_factory.calculate_global_colormap_range(
-                self.glass_brain_data, self.user_vmax
+                self.glass_brain_data, self.user_vmin, self.user_vmax
             )
         )
 

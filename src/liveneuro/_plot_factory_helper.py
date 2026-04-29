@@ -146,7 +146,9 @@ class PlotFactoryHelper:
 
     @staticmethod
     def calculate_global_colormap_range(
-        glass_brain_data: Optional[np.ndarray], user_vmax: Optional[float]
+        glass_brain_data: Optional[np.ndarray],
+        user_vmin: Optional[float],
+        user_vmax: Optional[float],
     ) -> Tuple[float, float]:
         """Calculate global min/max activity across all time points for fixed colormap."""
         data_max = 1.0
@@ -159,12 +161,12 @@ class PlotFactoryHelper:
 
             data_max = float(np.max(all_magnitudes))
 
-        global_vmin = 0.0
+        global_vmin = 0.0 if user_vmin is None else float(user_vmin)
         global_vmax = data_max if user_vmax is None else float(user_vmax)
 
         # Ensure we have a valid range (avoid zero range)
-        if global_vmax - global_vmin < 1e-10:
-            global_vmax = global_vmin + 1.0
+        if global_vmax <= global_vmin:
+            raise RuntimeError(f"{global_vmax=}, {global_vmin=}")
 
         return global_vmin, global_vmax
 

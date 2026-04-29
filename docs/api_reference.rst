@@ -27,13 +27,14 @@ Input Data Expectations
 **Vector Data** (with direction and magnitude):
 
 * Eelbrain NDVar with dimensions: ``([case,] time, source, space)``
-* MNE sample data: Built-in volumetric source with 3D vectors
-* Space dimension: 3D components (X, Y, Z)
+* Space dimension: 3D components (Right, Anterior, Superior)
+* Built-in MNE sample data object returned by ``create_sample_brain_data()``
 
 **Scalar Data** (magnitude only):
 
 * Eelbrain NDVar with dimensions: ``([case,] time, source)``
 * Single value per source at each time point
+* Sample-data object returned by ``create_sample_brain_data(has_vector_data=False)``
 
 **Built-in Sample Data:**
 

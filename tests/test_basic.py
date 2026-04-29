@@ -162,6 +162,16 @@ def test_custom_colormap():
     assert viz.cmap == custom_cmap
 
 
+def test_custom_color_range():
+    """Test explicit color range bounds."""
+    from liveneuro import LiveNeuro
+
+    viz = LiveNeuro(vmin=0.25, vmax=2.0)
+
+    assert viz.global_vmin == 0.25
+    assert viz.global_vmax == 2.0
+
+
 def test_different_arrow_thresholds():
     """Test different arrow threshold settings."""
     from liveneuro import LiveNeuro
