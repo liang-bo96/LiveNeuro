@@ -6,7 +6,7 @@ handling callbacks, hover/click events, and export functionality.
 """
 
 import random
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 import dash
 import numpy as np
@@ -171,7 +171,7 @@ class AppControllerHelper:
 
                     # If in real-time mode, a click will select the time and disable
                     # real-time mode for focused inspection
-                    new_realtime_value = [] if is_realtime else dash.no_update
+                    new_realtime_value: Any = [] if is_realtime else dash.no_update
 
                     return time_idx, source_idx, new_realtime_value
                 except (KeyError, IndexError, TypeError):
@@ -243,6 +243,9 @@ class AppControllerHelper:
             mode = "inline" if JUPYTER_AVAILABLE else "external"
 
         if JUPYTER_AVAILABLE and mode in ["inline", "jupyterlab"]:
+            jupyter_mode: Literal["inline", "jupyterlab"] = (
+                "inline" if mode == "inline" else "jupyterlab"
+            )
             # Prepare visualization for Jupyter (layout + sizing)
             self._viz.prepare_for_jupyter()
 
@@ -258,7 +261,10 @@ class AppControllerHelper:
 
             # Use modern Dash Jupyter integration
             self._viz.app.run(
-                debug=debug, port=port, jupyter_mode=mode, jupyter_height=iframe_height
+                debug=debug,
+                port=port,
+                jupyter_mode=jupyter_mode,
+                jupyter_height=iframe_height,
             )
         else:
             print(f"\nStarting 2D Brain Visualization Dash app on port {port}...")

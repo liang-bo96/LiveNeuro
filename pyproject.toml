@@ -91,6 +91,8 @@ module = [
     "dash.*",
     "eelbrain",
     "eelbrain.*",
+    "IPython",
+    "IPython.*",
     "matplotlib",
     "matplotlib.*",
     "plotly",
