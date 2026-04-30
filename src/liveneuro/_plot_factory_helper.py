@@ -463,7 +463,7 @@ class PlotFactoryHelper:
         # Show all data without filtering
         active_coords = coords
         active_activity = activity
-        active_indices = np.arange(len(coords))
+        active_indices: np.ndarray = np.arange(len(coords))
 
         # Create Plotly figure
         fig = go.Figure()
