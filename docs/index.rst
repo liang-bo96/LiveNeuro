@@ -8,7 +8,7 @@ Welcome to LiveNeuro's documentation!
    :align: center
    :width: 720px
 
-.. image:: https://img.shields.io/badge/python-3.8%2B-blue
+.. image:: https://img.shields.io/badge/python-3.10%2B-blue
    :target: https://www.python.org/downloads/
    :alt: Python Version
 

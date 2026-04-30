@@ -4,7 +4,7 @@ Installation
 Requirements
 ------------
 
-LiveNeuro requires Python 3.8 or higher and an environment with Eelbrain
+LiveNeuro requires Python 3.10 or higher and an environment with Eelbrain
 available. The recommended procedure is to create an environment through
 ``mamba`` following the official Eelbrain installation guide, then install
 LiveNeuro with ``pip``:
