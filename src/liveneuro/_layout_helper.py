@@ -743,7 +743,7 @@ class LayoutBuilderHelper:
         """
         num_views = len(self._viz.brain_views)
 
-        layout_configs = {
+        layout_configs: dict[str, dict[str, Any]] = {
             "vertical": {
                 "butterfly_width": "100%",
                 "brain_width": self._get_brain_width_for_views(num_views, "vertical"),

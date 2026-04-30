@@ -81,6 +81,25 @@ liveneuro = ["data/*.npy", "data/*.json"]
 line-length = 88
 target-version = ['py38']
 
+[tool.mypy]
+python_version = "3.10"
+warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = [
+    "dash",
+    "dash.*",
+    "eelbrain",
+    "eelbrain.*",
+    "matplotlib",
+    "matplotlib.*",
+    "plotly",
+    "plotly.*",
+    "scipy",
+    "scipy.*",
+]
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = "test_*.py"
