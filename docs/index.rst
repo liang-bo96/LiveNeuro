@@ -1,62 +1,41 @@
-Welcome to LiveNeuro's documentation!
-======================================
+.. raw:: html
 
-**LiveNeuro** is an interactive 2D brain visualization library using Plotly and Dash, designed for real-time exploration of neural activity data.
+   <p style="text-align: right;">
+     <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.10%2B-blue" alt="Python Version"></a>
+     <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-green" alt="License"></a>
+     <a href="https://liveneuro.readthedocs.io/en/latest/index.html"><img src="https://img.shields.io/badge/docs-ReadTheDocs-blue" alt="Documentation"></a>
+   </p>
+
+LiveNeuro
+=========
 
 .. image:: liveNeuron.png
    :alt: LiveNeuro visualization overview
    :align: center
    :width: 720px
 
-.. image:: https://img.shields.io/badge/python-3.10%2B-blue
-   :target: https://www.python.org/downloads/
-   :alt: Python Version
+**LiveNeuro** helps MNE-Python and Eelbrain users inspect volume source estimates
+as interactive 2D brain projections with linked time-course plots.
+It is built on Plotly and Dash, works in notebooks or a browser,
+and accepts MNE volume vector source estimates and :class:`eelbrain.NDVar` objects.
 
-.. image:: https://img.shields.io/badge/license-MIT-green
-   :target: https://opensource.org/licenses/MIT
-   :alt: License
+Start Here
+----------
 
-.. image:: https://img.shields.io/badge/docs-ReadTheDocs-blue
-   :target: https://liveneuron.readthedocs.io/en/latest/index.html
-   :alt: Documentation
+* :ref:`installation`: create an environment and install LiveNeuro.
+* :ref:`quick-start`: open the built-in sample visualization.
+* :ref:`eelbrain-data-input`: plot an :class:`eelbrain.NDVar`.
+* :ref:`mne-data-input`: plot an :class:`mne.VolVectorSourceEstimate`.
+* :doc:`api_reference`: look up constructor parameters and public methods.
 
-Key Features
-------------
+Highlights
+----------
 
-* **Interactive 2D brain projections** - axial, sagittal, coronal, and hemisphere views
-* **Activity time-course plots** for time series visualization
-* **Optimized arrow rendering** for smoother interaction with dense vector fields
-* **Real-time controls** for time navigation and interaction
-* **Jupyter notebook support** for interactive development
-* **Customizable colormaps** and visualization options
-* **Export capabilities** for static images
-
-Quick Start
------------
-
-Installation
-^^^^^^^^^^^^
-
-**Install from GitHub**
-
-.. code-block:: bash
-
-   pip install https://github.com/liang-bo96/LiveNeuro/archive/refs/heads/main.zip
-
-Basic Usage
-^^^^^^^^^^^
-
-.. code-block:: python
-
-   from liveneuro import LiveNeuro
-
-   # Create visualization with built-in MNE sample data
-   viz = LiveNeuro()
-   
-   # Launch in interactive plot
-   viz.run()
-
-For a full walkthrough of layouts and controls, start with the :doc:`user_guide`.
+* Linked activity time course with click-to-navigate updates.
+* Interactive sagittal, coronal, axial, and hemisphere projections.
+* Vector-field arrows with scale and threshold controls.
+* Notebook, JupyterLab, and external browser display modes.
+* Static export for figures and presentations.
 
 .. toctree::
    :maxdepth: 2
@@ -67,7 +46,7 @@ For a full walkthrough of layouts and controls, start with the :doc:`user_guide`
    api_reference
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`

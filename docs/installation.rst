@@ -1,65 +1,75 @@
+.. _installation:
+
 Installation
 ============
 
-Requirements
-------------
+LiveNeuro requires Python 3.10 or higher and the scientific Python stack used by
+MNE-Python and Eelbrain. For the most reliable setup, create an environment with
+``mamba`` or ``conda`` first, then install LiveNeuro with ``pip``.
 
-LiveNeuro requires Python 3.10 or higher and an environment with Eelbrain
-available. The recommended procedure is to create an environment through
-``mamba`` following the official Eelbrain installation guide, then install
-LiveNeuro with ``pip``:
+Create An Environment
+---------------------
 
-https://eelbrain.readthedocs.io/en/stable/installing.html
+Follow the Eelbrain installation guide for platform-specific dependencies:
 
-Install from GitHub
--------------------
+* `Eelbrain installation guide <https://eelbrain.readthedocs.io/en/stable/installing.html>`_
 
-Install directly from GitHub:
-
-.. code-block:: bash
-
-   pip install https://github.com/liang-bo96/LiveNeuro/archive/refs/heads/main.zip
-
-Verify Installation
--------------------
-
-To verify the installation, run:
-
-.. code-block:: python
-
-   from liveneuro import LiveNeuro
-   print("LiveNeuro installed successfully!")
-
-Troubleshooting
----------------
-
-Common Issues
-^^^^^^^^^^^^^
-
-**ImportError: No module named 'liveneuro'**
-
-Make sure you have installed the package correctly. Try:
-
-.. code-block:: bash
-
-   pip install --upgrade "https://github.com/liang-bo96/LiveNeuro/archive/refs/heads/main.zip"
-
-**Plotly/Dash version conflicts**
-
-If you encounter version conflicts, try:
-
-.. code-block:: bash
-
-   pip install --upgrade plotly dash
-
-**Missing dependencies**
-
-If Eelbrain is missing or not importable, revisit the Eelbrain installation
-guide for platform-specific environment setup.
+For an existing conda-style environment, the minimum Eelbrain install is:
 
 .. code-block:: bash
 
    mamba install -c conda-forge eelbrain
 
-For editable installs, test commands, and repository structure, see the
-repository ``README.md``.
+Install LiveNeuro
+-----------------
+
+Install the current development version directly from GitHub:
+
+.. code-block:: bash
+
+   pip install https://github.com/Eelbrain/LiveNeuro/archive/refs/heads/main.zip
+
+Verify The Install
+------------------
+
+Run a short import check:
+
+.. code-block:: python
+
+   from liveneuro import LiveNeuro
+
+   viz = LiveNeuro()
+   print("LiveNeuro is ready.")
+
+Then continue with :ref:`quick-start`.
+
+.. _installation-troubleshooting:
+
+Installation Troubleshooting
+----------------------------
+
+``ImportError: No module named 'liveneuro'``
+   Confirm that the environment running Python is the same one where LiveNeuro
+   was installed, then reinstall or upgrade:
+
+   .. code-block:: bash
+
+      pip install --upgrade "https://github.com/Eelbrain/LiveNeuro/archive/refs/heads/main.zip"
+
+Missing Eelbrain or scientific dependencies
+   Revisit the Eelbrain installation guide, or install Eelbrain from
+   conda-forge:
+
+   .. code-block:: bash
+
+      mamba install -c conda-forge eelbrain
+
+Plotly or Dash version conflicts
+   Upgrade the interactive plotting dependencies inside the active environment:
+
+   .. code-block:: bash
+
+      pip install --upgrade plotly dash
+
+For editable installs, tests, and repository structure, see the repository
+``README.md``.

@@ -26,7 +26,6 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.intersphinx",
     "sphinx.ext.autosummary",
-    "myst_parser",
 ]
 
 autodoc_mock_imports = [
@@ -44,24 +43,28 @@ autodoc_mock_imports = [
 ]
 
 templates_path = ["_templates"]
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = [
+    "_build",
+    ".ipynb_checkpoints",
+    "README.rst",
+    "Thumbs.db",
+    ".DS_Store",
+]
 
 # The suffix(es) of source filenames.
 source_suffix = {
     ".rst": "restructuredtext",
-    ".md": "markdown",
 }
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "sphinx_rtd_theme"
-html_static_path = ["_static"]
+html_static_path = []
 
 # Theme options
 html_theme_options = {
     "logo_only": False,
-    "display_version": True,
     "prev_next_buttons_location": "bottom",
     "style_external_links": True,
     "collapse_navigation": False,
@@ -99,19 +102,6 @@ intersphinx_mapping = {
     "numpy": ("https://numpy.org/doc/stable/", None),
     "matplotlib": ("https://matplotlib.org/stable/", None),
     "plotly": ("https://plotly.com/python-api-reference/", None),
+    "mne": ("https://mne.tools/stable/", None),
+    "eelbrain": ("https://eelbrain.readthedocs.io/en/stable/", None),
 }
-
-# MyST-Parser settings
-myst_enable_extensions = [
-    "colon_fence",
-    "deflist",
-    "dollarmath",
-    "fieldlist",
-    "html_admonition",
-    "html_image",
-    "replacements",
-    "smartquotes",
-    "strikethrough",
-    "substitution",
-    "tasklist",
-]

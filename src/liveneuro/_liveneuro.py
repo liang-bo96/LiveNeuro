@@ -2,8 +2,9 @@
 LiveNeuro core module.
 
 This module provides the core LiveNeuro class, an interactive 2D visualization
-interface for Eelbrain's NDVar and MNE source estimate data structures. It
-transforms neuroscience data into explorable brain maps and time-series plots.
+interface for Eelbrain's :class:`eelbrain.NDVar` and MNE source estimate data
+structures. It transforms neuroscience data into explorable brain maps and
+time-series plots.
 """
 
 from __future__ import annotations
@@ -33,8 +34,9 @@ class LiveNeuro:
         If ``y`` has a case dimension, the mean is plotted.
         If ``y`` has a space dimension, the norm is plotted.
         If None, uses MNE sample data for demonstration.
-        Pass an Eelbrain NDVar, an MNE ``VolVectorSourceEstimate`` with
-        ``src``, or the sample data object returned by
+        Pass an Eelbrain :class:`eelbrain.NDVar`, an MNE
+        :class:`mne.VolVectorSourceEstimate` with ``src``, or the sample data
+        object returned by
         :func:`liveneuro.create_sample_brain_data`.
     cmap
         Plotly colorscale for heatmaps. Can be:
@@ -91,22 +93,25 @@ class LiveNeuro:
         'Source 0', 'Source 1', etc.). If False, hides all titles and legends for a
         cleaner visualization. Default is False.
     src
-        Matching MNE SourceSpaces object when ``y`` is an
-        ``mne.VolVectorSourceEstimate``. Required for MNE source estimates because
-        the source estimate stores vertex ids while LiveNeuro needs 3D source
-        coordinates.
+        Matching MNE :class:`mne.SourceSpaces` object when ``y`` is an
+        :class:`mne.VolVectorSourceEstimate`. Required for MNE source estimates
+        because the source estimate stores vertex ids while LiveNeuro needs 3D
+        source coordinates.
 
     Notes
     -----
     Expected input format
 
-    - For vector data: NDVar with dimensions ([case,] time, source, space)
-    - For scalar data: NDVar with dimensions ([case,] time, source)
-    - For MNE vector volume data: VolVectorSourceEstimate plus matching ``src``
+    - For vector data: :class:`eelbrain.NDVar` with dimensions
+      ([case,] time, source, space)
+    - For scalar data: :class:`eelbrain.NDVar` with dimensions
+      ([case,] time, source)
+    - For MNE vector volume data: :class:`mne.VolVectorSourceEstimate` plus
+      matching ``src``
     - If case dimension present: mean across cases is plotted
     - If space dimension present: norm across space is plotted for butterfly plot
-    - ``create_sample_brain_data`` returns a minimal NDVar-like object compatible
-      with the ``y`` parameter for quick demos
+    - :func:`liveneuro.create_sample_brain_data` returns a minimal NDVar-like
+      object compatible with the ``y`` parameter for quick demos
     """
 
     def __init__(

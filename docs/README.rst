@@ -30,7 +30,7 @@ Read the Docs
 -------------
 
 The documentation is automatically built and hosted on Read the Docs at:
-https://liveneuron.readthedocs.io
+https://liveneuro.readthedocs.io
 
 The build is triggered automatically on every push to the main branch.
 

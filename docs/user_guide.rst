@@ -1,406 +1,44 @@
 User Guide
 ==========
 
-This comprehensive guide covers all features and configuration options of LiveNeuro based on the actual implementation.
-
-Getting Started
----------------
-
-Basic Workflow
-^^^^^^^^^^^^^^
-
-1. **Create** visualization object with desired parameters
-2. **Launch** with ``run()``
-3. **Interact** with hover, click, and zoom
-4. **Export** static images if needed
-
-.. code-block:: python
-
-   from liveneuro import LiveNeuro
-
-   # Step 1: Create
-   viz = LiveNeuro(display_mode="lyr")
-
-   # Step 2: Launch
-   viz.run()  # Auto inline in Jupyter; external browser otherwise
-
-   # Step 3: Interact (in browser/notebook)
-   # Step 4: Export
-   viz.export_images(output_dir="./plots", time_idx=30)
-
-Run Modes
----------
+LiveNeuro turns source-space time series into an interactive Dash application:
+a time-course plot controls one or more 2D brain projections, and each
+projection updates as you move through time.
 
 .. note::
 
-   In IPython shells (outside notebooks), explicitly pass ``mode="external"`` to
-   ``run()`` to start a visualization that can be accessed in a browser.
-* **Interpreter / shell**: uses built-in MNE sample data if ``y`` is omitted; launches a server on a random port (explicit ``mode="external"`` recommended).
+   Examples in this guide assume notebook use, where
+   :meth:`liveneuro.LiveNeuro.run` displays the app inline. See
+   :ref:`run-modes` for browser, JupyterLab, and fixed-port options.
 
-  .. code-block:: python
+.. _quick-start:
 
-     viz = LiveNeuro()
-     viz.run(mode="external")
+Quick Start
+-----------
 
-* **Notebook**: auto-selects ``mode="inline"`` (embedded IFrame). Choose explicitly if you want a browser or a Lab tab.
-
-  .. code-block:: python
-
-     viz = LiveNeuro()
-     viz.run()                    # inline by default in notebooks; use mode="external" for shells
-     # viz.run(mode="jupyterlab")  # open in JupyterLab tab
-     # viz.run(mode="external")    # force external browser
-
-Understanding Display Modes
-----------------------------
-
-Display modes control which anatomical views are shown and in what order.
-
-Anatomical Coordinate System
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-* **X-axis (Sagittal)**: Side view, left-right through brain
-* **Y-axis (Coronal)**: Front view, front-back through brain
-* **Z-axis (Axial)**: Top view, top-bottom through brain
-* **L**: Left hemisphere lateral view
-* **R**: Right hemisphere lateral view
-
-Single View Modes
-^^^^^^^^^^^^^^^^^
-
-Use single letters for individual views:
+Start with the built-in sample data to check that the app opens correctly:
 
 .. code-block:: python
 
-   viz = LiveNeuro(display_mode="x")  # Sagittal only
-   viz = LiveNeuro(display_mode="y")  # Coronal only
-   viz = LiveNeuro(display_mode="z")  # Axial only
-   viz = LiveNeuro(display_mode="l")  # Left hemisphere only
-   viz = LiveNeuro(display_mode="r")  # Right hemisphere only
-
-Multi-View Modes
-^^^^^^^^^^^^^^^^
-
-Combine letters for multiple views:
-
-.. code-block:: python
-
-   # Orthogonal views (special keyword)
-   viz = LiveNeuro(display_mode="ortho")  # x + y + z
-
-   # Hemisphere combinations
-   viz = LiveNeuro(display_mode="lr")     # Left + Right
-   viz = LiveNeuro(display_mode="lyr")    # Left + Coronal + Right (default)
-   viz = LiveNeuro(display_mode="lzr")    # Left + Axial + Right
-
-   # Axis combinations
-   viz = LiveNeuro(display_mode="xz")     # Sagittal + Axial
-   viz = LiveNeuro(display_mode="yx")     # Coronal + Sagittal
-   viz = LiveNeuro(display_mode="yz")     # Coronal + Axial
-
-Four-View Modes
-^^^^^^^^^^^^^^^
-
-For comprehensive anatomical coverage:
-
-.. code-block:: python
-
-   # Four views in different orders
-   viz = LiveNeuro(display_mode="lyrz")   # L + Coronal + R + Axial
-   viz = LiveNeuro(display_mode="lzry")   # L + Axial + R + Coronal
-
-**Note:** Order of letters determines display order of anatomical projections (left-to-right).
-
-Layout Modes
-------------
-
-Vertical Layout (Default)
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-**When to use:**
-
-* General use, including 1–4 projections
-* When the detailed activity time course should be prominent
-* When you want more horizontal space per projection
-
-**Characteristics:**
-
-* Detailed activity time course on top
-* Brain projections arranged beneath
-* Good for multiple projections while preserving horizontal space
-
-.. code-block:: python
-
-   viz = LiveNeuro(
-       display_mode="lyr",
-       layout_mode="vertical"  # Default
-   )
-
-Horizontal Layout
-^^^^^^^^^^^^^^^^^
-
-**When to use:**
-
-* Wide screens or presentations
-* When spatial layout (left-to-right comparison) is the focus
-
-**Characteristics:**
-
-* Detailed activity time course on the left
-* Brain projections arranged to the right
-
-
-.. code-block:: python
-
-   viz = LiveNeuro(
-       display_mode="lyrz",
-       layout_mode="horizontal"
-   )
-
-Arrow Visualization
--------------------
-
-Understanding Arrows
-^^^^^^^^^^^^^^^^^^^^
-
-Arrows represent vector fields in brain data:
-
-* **Direction**: Shows orientation of activity (e.g., current flow)
-* **Length**: Indicates magnitude (controlled by ``arrow_scale``)
-* **Visibility**: Filtered by ``arrow_threshold``
-
-Arrow Scale Parameter
-^^^^^^^^^^^^^^^^^^^^^
-
-The ``arrow_scale`` parameter (default: 1.0) controls arrow length:
-
-.. code-block:: python
-
-   # Short arrows for dense data
-   viz = LiveNeuro(arrow_scale=0.5)
-
-   # Default balanced length
-   viz = LiveNeuro(arrow_scale=1.0)
-
-   # Long arrows for sparse data
-   viz = LiveNeuro(arrow_scale=2.0)
-
-**Recommendations:**
-
-* Dense vector fields: 0.5 - 0.8
-* Moderate density: 1.0 (default)
-* Sparse fields: 1.2 - 2.0
-
-Arrow Threshold Parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The ``arrow_threshold`` parameter filters arrows by magnitude:
-
-.. code-block:: python
-
-   # Show all arrows
-   viz = LiveNeuro(arrow_threshold=None)
-
-   # Auto threshold (10% of maximum magnitude)
-   viz = LiveNeuro(arrow_threshold='auto')
-
-   # Custom threshold
-   viz = LiveNeuro(arrow_threshold=0.15)
-
-**When to use:**
-
-* ``None``: Small datasets or when all vectors are important
-* ``'auto'``: Good default for most cases
-* *float*: Fine-tune based on data characteristics
-
-Combined Arrow Optimization
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-For best results, combine both parameters:
-
-.. code-block:: python
-
-   # Dense data with many small vectors
-   viz = LiveNeuro(
-       arrow_scale=0.7,
-       arrow_threshold='auto'
-   )
-
-   # Sparse data with clear patterns
-   viz = LiveNeuro(
-       arrow_scale=1.5,
-       arrow_threshold=0.05
-   )
-
-Color Mapping
--------------
-
-Built-in Colormaps
-^^^^^^^^^^^^^^^^^^
-
-LiveNeuro supports Plotly's built-in colorscales:
-
-.. code-block:: python
-
-   # Sequential colormaps
-   viz = LiveNeuro(cmap='YlOrRd')    # Yellow-Orange-Red (default)
-   viz = LiveNeuro(cmap='Hot')       # Hot (red/orange/yellow)
-   viz = LiveNeuro(cmap='Viridis')   # Perceptually uniform
-   viz = LiveNeuro(cmap='OrRd')      # Orange-Red
-   viz = LiveNeuro(cmap='Reds')      # Red scale
-
-See https://plotly.com/python/builtin-colorscales/ for all options.
-
-Custom Colormaps
-^^^^^^^^^^^^^^^^
-
-Create custom colorscales with transparency:
-
-.. code-block:: python
-
-   # Custom gradient with transparency
-   custom_cmap = [
-       [0, 'rgba(255,255,0,0.5)'],    # Yellow, 50% transparent
-       [0.5, 'rgba(255,165,0,0.8)'],  # Orange, 80% opaque
-       [1, 'rgba(255,0,0,1.0)']       # Red, fully opaque
-   ]
-
-   viz = LiveNeuro(cmap=custom_cmap)
-
-**Color Range:**
-
-* Automatically scaled to data range (min to max)
-* Consistent across all views and time points
-* Unified colorbar shows current scaling
-* Override manually with ``vmin`` / ``vmax`` to lock the range
-
-.. code-block:: python
-
-   viz = LiveNeuro(vmin=-2.0, vmax=2.0)
-
-Activity Time Course Plot Modes
---------------------
-
-Full Mode (Default)
-^^^^^^^^^^^^^^^^^^^
-
-Shows a sampled set of source traces plus statistics (random subset for readability):
-
-.. code-block:: python
-
-   viz = LiveNeuro(show_max_only=False)
-
-**Displays:**
-
-* Random subset of source activity traces
-* Mean activity
-* Maximum activity across all sources
-
-Simplified Mode
-^^^^^^^^^^^^^^^
-
-Shows only summary statistics:
-
-.. code-block:: python
-
-   viz = LiveNeuro(show_max_only=True)
-
-**Displays:**
-
-* Mean activity
-* Maximum activity
-
-**When to use:**
-
-* You want a clean summary without individual traces
-* Presentations or screenshots where mean/max is enough
-
-Interactive Features
---------------------
-
-Hover Information
-^^^^^^^^^^^^^^^^^
-
-**Brain Plots:**
-
-* Hover over any voxel to see activity value
-* Shows magnitude at current time point
-
-**Detailed activity time course:**
-
-* Hover over time axis to see max and min activity
-* Displays values for all visible traces
-
-Time Navigation
-^^^^^^^^^^^^^^^
-
-**Click to Navigate:**
-
-* Click anywhere on the time-course axis
-* Brain views instantly update to that time point
-* Precise time selection with spike indicator
-
-
-Zoom and Pan
-^^^^^^^^^^^^
-
-**Mouse Controls:**
-
-* **Mouse Wheel**: Zoom in/out
-* **Click + Drag**: Box zoom (default drag mode)
-* **Pan**: Select the pan tool in the toolbar, then drag to move the view
-* **Double-click**: Reset to original view
-
-
-Data Input
-----------
-
-Using Built-in MNE Sample Data
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Simplest option for testing and learning:
-
-.. code-block:: python
-
-   # Use built-in MNE sample data
-   viz = LiveNeuro(y=None)
-
-**Characteristics:**
-
-* 1589 sources in volumetric source space
-* 76 time points (-100ms to 400ms)
-* Vector data (3D current dipoles)
-* Requires Eelbrain installed
-
-Using Eelbrain NDVar
-^^^^^^^^^^^^^^^^^^^^^
-
-For your own data:
-
-.. code-block:: python
-
-   from eelbrain import datasets
    from liveneuro import LiveNeuro
 
-   # Load Eelbrain data
-   data_ds = datasets.get_mne_sample(src='vol', ori='vector')
-   y = data_ds['src']  # NDVar with dimensions (case, time, source, space)
+   viz = LiveNeuro()
+   viz.run()
 
-   # Visualize
-   viz = LiveNeuro(y=y)
+Use :meth:`liveneuro.LiveNeuro.export_images` when you want static output:
 
-**Expected Dimensions:**
+.. code-block:: python
 
-* Vector data: ``([case,] time, source, space)``
-* Scalar data: ``([case,] time, source)``
-* If case dimension present: mean is computed automatically
+   viz.export_images(output_dir="./plots", time_idx=30)
 
-Using MNE VolVectorSourceEstimate
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. _mne-data-input:
 
-For MNE volume vector source estimates, pass the source estimate together with
-the matching source space. The source estimate provides vector data and time
-values; the source space provides the 3D coordinates needed for projections.
+Using MNE Data
+--------------
+
+For MNE users, the most direct input is a volume vector source estimate together
+with the matching source space. The source estimate supplies the data and time
+values; the source space supplies the 3D coordinates needed for projection.
 
 .. code-block:: python
 
@@ -421,7 +59,6 @@ values; the source space provides the 3D coordinates needed for projections.
        baseline=(None, 0),
        proj=True,
    )
-
    inverse_operator = read_inverse_operator(
        data_dir / "sample_audvis-meg-vol-7-meg-inv.fif"
    )
@@ -437,239 +74,287 @@ values; the source space provides the 3D coordinates needed for projections.
    )
 
    viz = LiveNeuro(y=stc, src=src)
-
-
-Running the Application
------------------------
-
-Browser Mode
-^^^^^^^^^^^^^^^^^^^^^^^
-
-Opens in external browser:
-
-.. code-block:: python
-
-   viz = LiveNeuro()
-   viz.run(mode="external")  # Random port; defaults to inline in notebooks, external browser otherwise
-
-   # Or specify port
-   viz.run(port=8888, mode="external")  # Force browser if inline is detected
-
-
-Jupyter Modes (Default)
-^^^^^^^^^^^^^
-
-Multiple options for Jupyter notebooks:
-
-.. code-block:: python
-
-   # Inline display (embedded in notebook) - auto size
    viz.run()
 
-   # JupyterLab tab (opens in separate tab)
-   viz.run(mode='jupyterlab')
+``src`` is required for MNE source estimates. LiveNeuro needs source-space
+coordinates for the 2D projections, while the MNE source estimate stores vertex
+ids and data values. Scalar MNE :class:`mne.VolSourceEstimate` objects are not
+currently accepted directly; use a vector
+:class:`mne.VolVectorSourceEstimate` or convert scalar source data to an
+Eelbrain :class:`eelbrain.NDVar`.
 
+.. _eelbrain-data-input:
+
+Using Eelbrain Data
+-------------------
+
+LiveNeuro also accepts Eelbrain :class:`eelbrain.NDVar` objects:
+
+.. code-block:: python
+
+   from eelbrain import datasets
+   from liveneuro import LiveNeuro
+
+   data = datasets.get_mne_sample(src="vol", ori="vector")
+   y = data["src"]
+
+   viz = LiveNeuro(y=y)
+   viz.run()
+
+Expected dimensions are ``([case,] time, source, space)`` for vector data and
+``([case,] time, source)`` for scalar data. If a case dimension is present,
+LiveNeuro plots the case average.
+
+Concepts
+--------
+
+Source estimates
+   LiveNeuro visualizes source activity over time. For MNE inputs, pass a
+   volume vector source estimate such as
+   :class:`mne.VolVectorSourceEstimate`.
+
+Source spaces
+   The matching MNE :class:`mne.SourceSpaces` object provides the source
+   coordinates. This is why MNE inputs use ``LiveNeuro(y=stc, src=src)``.
+
+Vector and scalar data
+   Vector data has a 3D orientation at each source and time point. LiveNeuro
+   shows its magnitude as color and its orientation as arrows. Supported scalar
+   :class:`eelbrain.NDVar` data is shown as magnitude only.
+
+Time course and projections
+   The time-course plot summarizes activity across sources. Clicking a time
+   point updates each brain projection to that time.
+
+.. _run-modes:
+
+Running The Application
+-----------------------
+
+:meth:`liveneuro.LiveNeuro.run` starts the Dash application. The common modes are:
+
+.. list-table::
+   :header-rows: 1
+
+   * - Mode
+     - Use
+     - Example
+   * - ``external``
+     - Browser tab from a script, shell, or notebook.
+     - ``viz.run(mode="external")``
+   * - ``inline``
+     - Embedded output in a notebook.
+     - ``viz.run(mode="inline")``
+   * - ``jupyterlab``
+     - Separate JupyterLab tab.
+     - ``viz.run(mode="jupyterlab")``
+
+Use a fixed port when you need a predictable URL:
+
+.. code-block:: python
+
+   viz.run(port=8888, mode="external")
+
+.. _display-modes:
+
+Display Modes
+-------------
+
+``display_mode`` controls which anatomical projections are shown and in what
+order. The default is ``"lyr"``: left hemisphere, coronal, right hemisphere.
+
+.. list-table::
+   :header-rows: 1
+
+   * - Value
+     - Views
+     - Typical use
+   * - ``"lyr"``
+     - Left, coronal, right
+     - Default hemisphere comparison.
+   * - ``"lr"``
+     - Left and right
+     - Compact hemisphere view.
+   * - ``"ortho"``
+     - Sagittal, coronal, axial
+     - MNE-style orthogonal overview.
+   * - ``"x"``, ``"y"``, ``"z"``
+     - One sagittal, coronal, or axial view
+     - Focused inspection.
+   * - ``"lyrz"`` or ``"lzry"``
+     - Four views
+     - Broader anatomical coverage.
+
+Letters determine display order, so ``"xz"`` and ``"zx"`` use the same two
+views in a different order.
+
+.. _layout-modes:
+
+Layout Modes
+------------
+
+``layout_mode`` controls where the time course appears relative to the brain
+views. The implementation default is ``"horizontal"``.
+
+.. list-table::
+   :header-rows: 1
+
+   * - Value
+     - Layout
+     - Good for
+   * - ``"horizontal"``
+     - Time course on the left, brain views on the right.
+     - Wide screens, notebooks, and side-by-side comparison.
+   * - ``"vertical"``
+     - Time course above the brain views.
+     - More horizontal space per brain projection.
+
+Example:
+
+.. code-block:: python
+
+   viz = LiveNeuro(display_mode="lyrz", layout_mode="horizontal")
+
+.. _visual-controls:
+
+Visual Controls
+---------------
+
+Arrow controls
+^^^^^^^^^^^^^^
+
+For vector data, arrows show orientation and color shows magnitude.
+``arrow_scale`` changes arrow length; ``arrow_threshold`` hides lower-magnitude
+vectors.
+
+.. code-block:: python
+
+   viz = LiveNeuro(
+       arrow_scale=0.7,
+       arrow_threshold="auto",
+   )
+
+Use ``arrow_threshold="auto"`` to hide vectors below 10% of the maximum
+magnitude. Use ``None`` when you want to see every vector.
+
+Color mapping
+^^^^^^^^^^^^^
+
+``cmap`` accepts Plotly colorscale names or custom colorscale lists:
+
+.. code-block:: python
+
+   viz = LiveNeuro(cmap="Viridis")
+
+LiveNeuro uses a consistent color range across views and time points. Set
+``vmin`` and ``vmax`` when you need fixed limits across figures:
+
+.. code-block:: python
+
+   viz = LiveNeuro(vmin=-2.0, vmax=2.0)
+
+See `Plotly built-in colorscales <https://plotly.com/python/builtin-colorscales/>`_
+for available color names.
+
+Time-course detail
+^^^^^^^^^^^^^^^^^^
+
+By default, the time-course plot shows a sampled set of source traces plus mean
+and maximum activity. Use ``show_max_only=True`` for a cleaner summary:
+
+.. code-block:: python
+
+   viz = LiveNeuro(show_max_only=True)
+
+Interacting With The Visualization
+----------------------------------
+
+* Hover over brain projections to inspect activity at the current time point.
+* Click the time-course plot to update all brain views.
+* Use mouse wheel zoom, box zoom, pan, and double-click reset from the Plotly
+  toolbar.
+
+.. _export-images:
 
 Exporting Images
 ----------------
 
-Basic Export
-^^^^^^^^^^^^
-
-Export current view as static image:
+:meth:`liveneuro.LiveNeuro.export_images` saves each brain projection and the
+time-course plot as separate image files:
 
 .. code-block:: python
 
    result = viz.export_images(
        output_dir="./images",
        time_idx=30,
-       format="png"
+       format="png",
    )
 
-   if result["status"] == "success":
-       for plot_type, filepath in result["files"].items():
-           print(f"{plot_type}: {filepath}")
+Supported formats include ``"png"``, ``"jpg"``, ``"svg"``, and ``"pdf"``.
+Kaleido is required for static export and is included in the package
+dependencies.
 
-**Exports:**
+.. _performance:
 
-* All brain projection views
-* Activity Time Course plot
-* Separate files for each
+Performance
+-----------
 
-Supported Formats
-^^^^^^^^^^^^^^^^^
-
-.. code-block:: python
-
-   # PNG (default, best for presentations)
-   viz.export_images(format="png")
-
-   # JPEG (smaller file size)
-   viz.export_images(format="jpg")
-
-   # SVG (vector, scalable)
-   viz.export_images(format="svg")
-
-   # PDF (publication quality)
-   viz.export_images(format="pdf")
-
-Performance Optimization
-------------------------
-
-For Large Datasets
-^^^^^^^^^^^^^^^^^^
-
-1. **Use arrow threshold**:
-
-   .. code-block:: python
-
-      viz = LiveNeuro(arrow_threshold='auto')
-
-2. **Simplify detailed activity time course**:
-
-   .. code-block:: python
-
-      viz = LiveNeuro(show_max_only=True)
-
-3. **Use focused display modes**:
-
-   .. code-block:: python
-
-      viz = LiveNeuro(display_mode="lr")  # Fewer views
-
-Combined Optimization
-^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: python
-
-   # Optimized for large dataset
-   viz = LiveNeuro(
-       display_mode="lr",          # Only 2 views
-       layout_mode="horizontal",   # Better layout
-       arrow_scale=0.7,            # Smaller arrows
-       arrow_threshold='auto',     # Filter weak vectors
-       show_max_only=True,         # Simplified time course
-       cmap='Hot'
-   )
-
-Best Practices
---------------
-
-For Presentations
-^^^^^^^^^^^^^^^^^
+For larger datasets, reduce the number of rendered traces and arrows before
+reducing the data itself:
 
 .. code-block:: python
 
    viz = LiveNeuro(
-       display_mode="lyr",          # Standard comparison view
-       layout_mode="horizontal",    # Wide screen friendly
-       arrow_scale=1.2,            # Slightly larger arrows
-       arrow_threshold='auto',     # Clean visualization
-       show_max_only=True,         # Focus on patterns
-       cmap='Hot'                  # High contrast
+       display_mode="lr",
+       arrow_scale=0.7,
+       arrow_threshold="auto",
+       show_max_only=True,
    )
 
-   viz.run(mode='external')  # Full screen
+These settings render fewer brain views, hide low-magnitude arrows, and keep the
+time course focused on summary traces.
 
-For Publications
-^^^^^^^^^^^^^^^^
-
-.. code-block:: python
-
-   viz = LiveNeuro(
-       display_mode="lyr",
-       arrow_scale=1.0,
-       arrow_threshold='auto',
-       cmap='YlOrRd'               # Publication-friendly
-   )
-
-   # Export high-quality images
-   viz.export_images(
-       output_dir="./publication_figures",
-       time_idx=30,
-       format="pdf"  # Vector format for publications
-   )
-
-For Interactive Exploration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: python
-
-   viz = LiveNeuro(
-       display_mode="lyrz",         # Comprehensive views
-       layout_mode="horizontal",    # Better for exploration
-       arrow_scale=1.0,
-       arrow_threshold=None,        # See all vectors initially
-       show_max_only=False,         # Full time-course information
-       cmap='Viridis'
-   )
-
-   viz.run()  # Enable debug with debug=True when troubleshooting
+.. _troubleshooting:
 
 Troubleshooting
 ---------------
 
-Common Issues
-^^^^^^^^^^^^^
+Installation problems
+   See :ref:`installation-troubleshooting`.
 
-**Issue: Random port is inconvenient**
+Missing or invalid ``src`` with MNE data
+   MNE source estimates store data and vertex ids, but LiveNeuro also needs the
+   matching source-space coordinates. Pass the source space used to create the
+   estimate: ``LiveNeuro(y=stc, src=src)``. See :ref:`mne-data-input`.
 
-Solution:
+Scalar MNE :class:`mne.VolSourceEstimate` input fails
+   LiveNeuro currently accepts MNE :class:`mne.VolVectorSourceEstimate` objects
+   directly, not scalar :class:`mne.VolSourceEstimate` objects. Convert scalar
+   source data to an Eelbrain :class:`eelbrain.NDVar` or use a vector source
+   estimate.
 
-.. code-block:: python
+Invalid ``display_mode`` or ``layout_mode``
+   Check :ref:`display-modes` and :ref:`layout-modes` for supported values.
 
-   viz.run(port=8888)  # Use fixed port
+The browser URL changes on each run
+   Pass a fixed port, for example ``viz.run(port=8888, mode="external")``.
 
-**Issue: Arrows too dense or unclear**
+Arrows are too dense
+   Use ``arrow_threshold="auto"`` and reduce ``arrow_scale``.
 
-Solution:
+The time-course plot is too cluttered
+   Use ``show_max_only=True``.
 
-.. code-block:: python
+Export fails
+   Confirm that the output directory is writable and that Kaleido is installed
+   in the active environment.
 
-   viz = LiveNeuro(
-       arrow_scale=0.7,            # Reduce size
-       arrow_threshold='auto'      # Filter weak ones
-   )
+More diagnostic output
+   Run with ``debug=True``:
 
-**Issue: Detailed activity time course too cluttered**
+   .. code-block:: python
 
-Solution:
+      viz.run(debug=True)
 
-.. code-block:: python
-
-   viz = LiveNeuro(show_max_only=True)
-
-**Issue: Slow performance**
-
-Solution:
-
-.. code-block:: python
-
-   viz = LiveNeuro(
-       display_mode="lr",          # Fewer views
-       arrow_threshold='auto',     # Fewer arrows
-       show_max_only=True         # Simpler time course
-   )
-
-**Issue: Export fails**
-
-Check:
-
-1. Output directory exists or can be created
-2. Kaleido is installed (included in dependencies, upgrade if needed): ``pip install -U kaleido``
-3. Sufficient disk space
-
-Debug Mode
-^^^^^^^^^^
-
-Debug mode is off by default for a clean UI. Enable it when troubleshooting:
-
-.. code-block:: python
-
-   viz.run(debug=True)
-
-This provides:
-
-* Detailed console output
-* Error tracebacks
-* Performance information
+For constructor parameters and method signatures, see
+:class:`liveneuro.LiveNeuro` in the :doc:`api_reference`.
